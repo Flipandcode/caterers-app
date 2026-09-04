@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useState } from "react";
 import { MenuCategory, FoodType, MenuItem } from "@/types/domain";
 import { formatPaise, rupeesToPaise, paiseToRupees } from "@/lib/money";
