@@ -1,11 +1,13 @@
 "use client";
 
+import * as React from "react";
 import { useMemo, useState } from "react";
 import { MenuCategoryWithItems, MenuItem, FoodType } from "@/types/domain";
 import { MenuCategorySection } from "./MenuCategorySection";
 import { MenuItemForm } from "./MenuItemForm";
 import { Input } from "@/components/ui/input";
 import { Search, Plus } from "lucide-react";
+import { createMenuCategoryAction } from "@/server/actions/menu-categories";
 import {
   createMenuItemAction,
   updateMenuItemAction,
@@ -39,6 +41,10 @@ export function MenuCatalogueScreen({ businessId, initialCategories }: MenuCatal
   const [foodFilter, setFoodFilter] = useState<FoodFilter>("all");
   const [formOpen, setFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | undefined>(undefined);
+  const [addingCategory, setAddingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [categoryError, setCategoryError] = useState<string | null>(null);
+  const [savingCategory, setSavingCategory] = useState(false);
 
   const flatCategories = useMemo(() => categories.map((c) => ({ id: c.id, name: c.name })), [categories]);
 
@@ -98,6 +104,26 @@ export function MenuCatalogueScreen({ businessId, initialCategories }: MenuCatal
     }
   }
 
+  async function handleAddCategory(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newCategoryName.trim()) {
+      setCategoryError("Give the category a name.");
+      return;
+    }
+    setSavingCategory(true);
+    setCategoryError(null);
+    try {
+      const created = await createMenuCategoryAction({ businessId, name: newCategoryName.trim() });
+      setCategories((prev) => [...prev, { ...created, items: [] }]);
+      setNewCategoryName("");
+      setAddingCategory(false);
+    } catch {
+      setCategoryError("We couldn't add this category. Please try again.");
+    } finally {
+      setSavingCategory(false);
+    }
+  }
+
   return (
     <div className="pb-24">
       <header className="sticky top-0 z-10 bg-[hsl(var(--color-bg))]/95 px-4 pb-3 pt-5 backdrop-blur">
@@ -131,6 +157,43 @@ export function MenuCatalogueScreen({ businessId, initialCategories }: MenuCatal
             </button>
           ))}
         </div>
+
+        {addingCategory ? (
+          <form onSubmit={handleAddCategory} className="mt-3 flex items-center gap-2">
+            <Input
+              autoFocus
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="e.g. Beverages"
+              className="h-10 flex-1 text-sm"
+            />
+            <button
+              type="submit"
+              disabled={savingCategory}
+              className="h-10 rounded-lg bg-[hsl(var(--color-marigold))] px-3 text-sm font-medium text-white"
+            >
+              {savingCategory ? "Adding…" : "Add"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAddingCategory(false);
+                setCategoryError(null);
+              }}
+              className="h-10 px-2 text-sm text-[hsl(var(--color-ink))]/50"
+            >
+              Cancel
+            </button>
+          </form>
+        ) : (
+          <button
+            onClick={() => setAddingCategory(true)}
+            className="mt-3 text-sm font-medium text-[hsl(var(--color-marigold))]"
+          >
+            + Add category
+          </button>
+        )}
+        {categoryError && <p className="mt-1 text-sm text-[hsl(var(--color-tamarind))]">{categoryError}</p>}
       </header>
 
       <div className="mt-2">
