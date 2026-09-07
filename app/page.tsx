@@ -1,11 +1,10 @@
 import { redirect } from "next/navigation";
 
 /**
- * The real app has no meaningful "/" screen — signed-out visitors belong at
- * /login, signed-in ones at /dashboard. Once auth is built (next phase),
- * this should check the session and redirect accordingly. For now it sends
- * everyone to /menus, the one screen that exists, so the deployed URL isn't
- * a dead end.
+ * The real app has no meaningful "/" screen. Rather than duplicate the
+ * signed-in/signed-out check here, this redirects to /menus, which already
+ * calls getActiveBusinessId() and will itself bounce signed-out visitors to
+ * /login and signed-in-but-no-business users to /onboarding.
  */
 export default function RootPage() {
   redirect("/menus");

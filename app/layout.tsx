@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   description: "Manage your catering business from your phone.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>{children}</body>
