@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const signUpSchema = z.object({
@@ -79,6 +80,7 @@ export async function signInAction(input: z.infer<typeof signInSchema>): Promise
 export async function signOutAction(): Promise<void> {
   const supabase = createServerSupabaseClient();
   await supabase.auth.signOut();
+  redirect("/login");
 }
 
 export async function requestPasswordResetAction(

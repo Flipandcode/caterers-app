@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   MenuCategoryWithItems,
   OrderFoodType,
@@ -44,6 +45,7 @@ interface DraftPreselect {
  * A category can carry both at once, or neither if it's unused.
  */
 export function PackageBuilder({ businessId, categories, existingPackage }: PackageBuilderProps) {
+  const router = useRouter();
   const [name, setName] = useState(existingPackage?.name ?? "");
   const [description, setDescription] = useState(existingPackage?.description ?? "");
   const [foodType, setFoodType] = useState<OrderFoodType>(existingPackage?.foodType ?? "veg");
@@ -120,7 +122,8 @@ export function PackageBuilder({ businessId, categories, existingPackage }: Pack
         categoryRules: rules,
         preselectedItems: preselected,
       });
-      // In the real app: router.push('/packages') + toast('Package saved')
+      router.push("/packages");
+      router.refresh();
     } catch {
       setError("We couldn't save this package. Please try again.");
     } finally {
