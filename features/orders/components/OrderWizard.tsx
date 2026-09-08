@@ -227,7 +227,7 @@ export function OrderWizard({ businessId, categories, packages }: OrderWizardPro
           })
         : [
             // preselected fixed items from the package
-            ...(selectedPackage && selectedPackage !== "custom"
+            ...(selectedPackage
               ? selectedPackage.preselectedItems.map((p) => ({
                   menuItemId: p.menuItemId,
                   nameSnapshot: p.menuItemName,
