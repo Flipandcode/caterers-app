@@ -1,7 +1,11 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { Order, OrderStatus } from "@/types/domain";
 
-export interface OrderListRow extends Order {
+// Deliberately omits menuItems: the list/dashboard cards don't render
+// per-order menu detail, so hydrating it here would mean an extra join for
+// every order just to satisfy the type. Order detail pages (Phase 4) should
+// fetch menuItems separately, scoped to the one order being viewed.
+export interface OrderListRow extends Omit<Order, "menuItems"> {
   customerName: string;
   totalPaidPaise: number;
 }
@@ -38,6 +42,7 @@ function mapRow(row: any, balance: number): OrderListRow {
     grandTotalPaise: row.grand_total_paise,
     termsSnapshot: row.terms_snapshot,
     status: row.status as OrderStatus,
+    isCancelled: row.is_cancelled,
     customerName: row.customers?.name ?? "Unknown",
     totalPaidPaise: balance,
   };
