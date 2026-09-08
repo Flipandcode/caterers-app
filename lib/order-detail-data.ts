@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { Order, OrderMenuItem, OrderStatus, Customer } from "@/types/domain";
+import { Order, OrderMenuItem, OrderStatus, Customer, Payment, PaymentType, PaymentMethod } from "@/types/domain";
 
 export interface OrderDetail extends Order {
   customer: Customer;
   totalPaidPaise: number;
+  payments: Payment[];
 }
 
 function mapMenuItem(row: any): OrderMenuItem {
@@ -34,11 +35,26 @@ function mapCustomer(row: any): Customer {
   };
 }
 
+function mapPayment(row: any): Payment {
+  return {
+    id: row.id,
+    businessId: row.business_id,
+    orderId: row.order_id,
+    paymentNumber: row.payment_number,
+    amountPaise: row.amount_paise,
+    paymentType: row.payment_type as PaymentType,
+    paymentMethod: row.payment_method as PaymentMethod,
+    paymentDate: row.payment_date,
+    referenceNumber: row.reference_number,
+    notes: row.notes,
+  };
+}
+
 /** Fetches one order with everything the detail screen needs. 404s if the order doesn't exist or isn't visible to this business under RLS. */
 export async function fetchOrderDetail(businessId: string, orderId: string): Promise<OrderDetail> {
   const supabase = createServerSupabaseClient();
 
-  const [{ data: order, error }, { data: menuItems }, { data: balance }] = await Promise.all([
+  const [{ data: order, error }, { data: menuItems }, { data: balance }, { data: payments }] = await Promise.all([
     supabase
       .from("orders")
       .select("*, customers(*)")
@@ -51,6 +67,12 @@ export async function fetchOrderDetail(businessId: string, orderId: string): Pro
       .select("total_paid_paise")
       .eq("order_id", orderId)
       .maybeSingle(),
+    supabase
+      .from("payments")
+      .select("*")
+      .eq("order_id", orderId)
+      .order("payment_date", { ascending: false })
+      .order("created_at", { ascending: false }),
   ]);
 
   if (error || !order) notFound();
@@ -90,5 +112,6 @@ export async function fetchOrderDetail(businessId: string, orderId: string): Pro
     menuItems: (menuItems ?? []).map(mapMenuItem),
     customer: mapCustomer(order.customers),
     totalPaidPaise: balance?.total_paid_paise ?? 0,
+    payments: (payments ?? []).map(mapPayment),
   };
 }

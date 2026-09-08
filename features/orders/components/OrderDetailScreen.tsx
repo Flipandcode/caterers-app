@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { OrderDetail } from "@/lib/order-detail-data";
-import { formatPaise, paymentStatus } from "@/lib/money";
+import { formatPaise } from "@/lib/money";
+import { OrderPaymentsPanel } from "./OrderPaymentsPanel";
 
 const STATUS_LABELS: Record<string, string> = {
   enquiry: "Enquiry",
@@ -13,9 +14,6 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export function OrderDetailScreen({ order }: { order: OrderDetail }) {
-  const balancePaise = order.grandTotalPaise - order.totalPaidPaise;
-  const status = paymentStatus(order.grandTotalPaise, order.totalPaidPaise, order.eventDate);
-
   const vegItems = order.menuItems.filter((i) => i.foodType !== "non_veg");
   const nonVegItems = order.menuItems.filter((i) => i.foodType === "non_veg");
   const showSplit = order.foodType === "mixed" && vegItems.length > 0 && nonVegItems.length > 0;
@@ -85,12 +83,16 @@ export function OrderDetailScreen({ order }: { order: OrderDetail }) {
       </Section>
 
       <Section title="Payments">
-        <Row label="Total paid" value={formatPaise(order.totalPaidPaise)} />
-        <Row label="Balance due" value={formatPaise(balancePaise)} emphasize={balancePaise > 0} />
-        {status === "overdue" && <p className="mt-1 text-sm font-medium text-tamarind">Payment overdue</p>}
-        <p className="mt-3 text-sm text-ink/50">
-          Recording payments and generating a customer quotation PDF are coming in the next phase — for now
-          this screen confirms the order saved correctly.
+        <OrderPaymentsPanel
+          businessId={order.businessId}
+          orderId={order.id}
+          grandTotalPaise={order.grandTotalPaise}
+          totalPaidPaise={order.totalPaidPaise}
+          eventDateISO={order.eventDate}
+          payments={order.payments}
+        />
+        <p className="mt-3 text-xs text-ink/40">
+          Generating a customer quotation PDF is coming in a later phase.
         </p>
       </Section>
 
