@@ -79,6 +79,22 @@ export async function createOrderAction(
 
   const supabase = createServerSupabaseClient();
 
+  // Terms snapshot is always computed server-side from the business's
+  // current active terms, never trusted from the client — this is a
+  // legally-relevant document, and the wizard doesn't have a terms editor
+  // yet anyway (it always sends null).
+  const { data: terms } = await supabase
+    .from("business_terms")
+    .select("title, body")
+    .eq("business_id", d.businessId)
+    .eq("is_active", true)
+    .order("display_order");
+
+  const termsSnapshot =
+    terms && terms.length > 0
+      ? terms.map((t) => `${t.title}\n${t.body}`).join("\n\n")
+      : null;
+
   const { data: orderId, error } = await supabase.rpc("create_order", {
     p_business_id: d.businessId,
     p_customer_id: d.customerId,
@@ -106,7 +122,7 @@ export async function createOrderAction(
     p_subtotal_paise: totals.subtotalPaise,
     p_tax_amount_paise: totals.taxAmountPaise,
     p_grand_total_paise: totals.grandTotalPaise,
-    p_terms_snapshot: d.termsSnapshot,
+    p_terms_snapshot: termsSnapshot,
     p_menu_items: d.menuItems.map((m) => ({
       menu_item_id: m.menuItemId,
       name_snapshot: m.nameSnapshot,

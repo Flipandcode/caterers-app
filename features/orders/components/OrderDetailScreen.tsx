@@ -91,8 +91,38 @@ export function OrderDetailScreen({ order }: { order: OrderDetail }) {
           eventDateISO={order.eventDate}
           payments={order.payments}
         />
-        <p className="mt-3 text-xs text-ink/40">
-          Generating a customer quotation PDF is coming in a later phase.
+      </Section>
+
+      <Section title="Documents">
+        <div className="flex flex-col gap-2">
+          <a
+            href={`/api/orders/${order.id}/quotation`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg border border-surface px-4 py-2.5 text-center text-sm font-medium"
+          >
+            Quotation PDF
+          </a>
+          <a
+            href={`/api/orders/${order.id}/order-confirmation`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg border border-surface px-4 py-2.5 text-center text-sm font-medium"
+          >
+            Order Confirmation PDF
+          </a>
+          <a
+            href={`/api/orders/${order.id}/kitchen-sheet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg border border-surface px-4 py-2.5 text-center text-sm font-medium"
+          >
+            Kitchen Sheet (no pricing)
+          </a>
+        </div>
+        <p className="mt-2 text-xs text-ink/40">
+          Opens in a new tab — use your browser's share or download option from there. Each generation is
+          tracked as a new version; older versions aren't deleted.
         </p>
       </Section>
 

@@ -21,7 +21,8 @@
     "tailwind-merge": "^2.4.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
-    "@radix-ui/react-slot": "^1.1.0"
+    "@radix-ui/react-slot": "^1.1.0",
+    "@react-pdf/renderer": "^3.4.4"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
