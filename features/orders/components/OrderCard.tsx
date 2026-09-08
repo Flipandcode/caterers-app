@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { OrderListRow } from "@/lib/orders-data";
 import { formatPaise, paymentStatus } from "@/lib/money";
 
@@ -30,8 +31,9 @@ export function OrderCard({ order }: { order: OrderListRow }) {
   const isSoon = ["Today", "Tomorrow"].includes(daysUntil(order.eventDate));
 
   return (
-    <div
-      className={`rounded-lg border p-4 ${
+    <Link
+      href={`/orders/${order.id}`}
+      className={`block rounded-lg border p-4 ${
         isSoon ? "border-marigold bg-marigold/5" : "border-surface"
       }`}
     >
@@ -76,6 +78,6 @@ export function OrderCard({ order }: { order: OrderListRow }) {
       {status === "overdue" && (
         <p className="mt-1.5 text-xs font-medium text-tamarind">Payment overdue</p>
       )}
-    </div>
+    </Link>
   );
 }
