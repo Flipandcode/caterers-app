@@ -5,6 +5,7 @@ import { OrderPaymentsPanel } from "./OrderPaymentsPanel";
 import { OrderStatusControl } from "./OrderStatusControl";
 import { PreparationChecklist } from "./PreparationChecklist";
 import { ActivityTimeline } from "./ActivityTimeline";
+import { WhatsAppShareButtons } from "./WhatsAppShareButtons";
 
 const STATUS_LABELS: Record<string, string> = {
   enquiry: "Enquiry",
@@ -16,7 +17,13 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: "Cancelled",
 };
 
-export function OrderDetailScreen({ order }: { order: OrderDetail }) {
+export function OrderDetailScreen({
+  order,
+  businessDisplayName,
+}: {
+  order: OrderDetail;
+  businessDisplayName: string;
+}) {
   const vegItems = order.menuItems.filter((i) => i.foodType !== "non_veg");
   const nonVegItems = order.menuItems.filter((i) => i.foodType === "non_veg");
   const showSplit = order.foodType === "mixed" && vegItems.length > 0 && nonVegItems.length > 0;
@@ -136,6 +143,21 @@ export function OrderDetailScreen({ order }: { order: OrderDetail }) {
           Opens in a new tab — use your browser's share or download option from there. Each generation is
           tracked as a new version; older versions aren't deleted.
         </p>
+      </Section>
+
+      <Section title="Share with customer">
+        <WhatsAppShareButtons
+          businessId={order.businessId}
+          orderId={order.id}
+          businessDisplayName={businessDisplayName}
+          customerName={order.customer.name}
+          customerPhone={order.customer.whatsappNumber ?? order.customer.phone}
+          eventName={order.eventName}
+          eventDateISO={order.eventDate}
+          guestCount={order.guestCount}
+          grandTotalPaise={order.grandTotalPaise}
+          totalPaidPaise={order.totalPaidPaise}
+        />
       </Section>
 
       {order.termsSnapshot && (
