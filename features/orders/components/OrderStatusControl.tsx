@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { OrderStatus } from "@/types/domain";
 import { updateOrderStatusAction, cancelOrderAction } from "@/server/actions/order-lifecycle";
 
-const STATUS_FLOW: { value: OrderStatus; label: string }[] = [
+type NonCancelledStatus = Exclude<OrderStatus, "cancelled">;
+
+const STATUS_FLOW: { value: NonCancelledStatus; label: string }[] = [
   { value: "enquiry", label: "Enquiry" },
   { value: "quotation_sent", label: "Quotation sent" },
   { value: "tentative", label: "Tentative" },
@@ -27,7 +29,7 @@ export function OrderStatusControl({ businessId, orderId, currentStatus, isCance
   const [error, setError] = useState<string | null>(null);
   const [confirmingCancel, setConfirmingCancel] = useState(false);
 
-  async function handleStatusClick(newStatus: OrderStatus) {
+  async function handleStatusClick(newStatus: NonCancelledStatus) {
     if (newStatus === currentStatus || saving) return;
     setSaving(true);
     setError(null);
