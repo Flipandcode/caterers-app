@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 import { OrderDetail } from "@/lib/order-detail-data";
 import { formatPaise } from "@/lib/money";
 import { OrderPaymentsPanel } from "./OrderPaymentsPanel";
+import { OrderStatusControl } from "./OrderStatusControl";
+import { PreparationChecklist } from "./PreparationChecklist";
+import { ActivityTimeline } from "./ActivityTimeline";
 
 const STATUS_LABELS: Record<string, string> = {
   enquiry: "Enquiry",
@@ -36,6 +39,15 @@ export function OrderDetailScreen({ order }: { order: OrderDetail }) {
           {STATUS_LABELS[order.status] ?? order.status}
         </span>
       </header>
+
+      <Section title="Status">
+        <OrderStatusControl
+          businessId={order.businessId}
+          orderId={order.id}
+          currentStatus={order.status}
+          isCancelled={order.isCancelled}
+        />
+      </Section>
 
       <Section title="Event details">
         <Row label="Date" value={new Date(order.eventDate + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })} />
@@ -131,6 +143,14 @@ export function OrderDetailScreen({ order }: { order: OrderDetail }) {
           <p className="whitespace-pre-line text-sm text-ink/70">{order.termsSnapshot}</p>
         </Section>
       )}
+
+      <Section title="Preparation">
+        <PreparationChecklist orderId={order.id} tasks={order.preparationTasks} />
+      </Section>
+
+      <Section title="Activity">
+        <ActivityTimeline entries={order.activityLog} />
+      </Section>
     </div>
   );
 }

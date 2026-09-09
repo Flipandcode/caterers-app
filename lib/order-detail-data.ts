@@ -1,11 +1,23 @@
 import { notFound } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { Order, OrderMenuItem, OrderStatus, Customer, Payment, PaymentType, PaymentMethod } from "@/types/domain";
+import {
+  Order,
+  OrderMenuItem,
+  OrderStatus,
+  Customer,
+  Payment,
+  PaymentType,
+  PaymentMethod,
+  PreparationTask,
+  ActivityLogEntry,
+} from "@/types/domain";
 
 export interface OrderDetail extends Order {
   customer: Customer;
   totalPaidPaise: number;
   payments: Payment[];
+  preparationTasks: PreparationTask[];
+  activityLog: ActivityLogEntry[];
 }
 
 function mapMenuItem(row: any): OrderMenuItem {
@@ -50,11 +62,40 @@ function mapPayment(row: any): Payment {
   };
 }
 
+function mapPreparationTask(row: any): PreparationTask {
+  return {
+    id: row.id,
+    orderId: row.order_id,
+    label: row.label,
+    isCompleted: row.is_completed,
+    completedAt: row.completed_at,
+    displayOrder: row.display_order,
+  };
+}
+
+function mapActivityLogEntry(row: any): ActivityLogEntry {
+  return {
+    id: row.id,
+    orderId: row.order_id,
+    actorId: row.actor_id,
+    action: row.action,
+    details: row.details,
+    createdAt: row.created_at,
+  };
+}
+
 /** Fetches one order with everything the detail screen needs. 404s if the order doesn't exist or isn't visible to this business under RLS. */
 export async function fetchOrderDetail(businessId: string, orderId: string): Promise<OrderDetail> {
   const supabase = createServerSupabaseClient();
 
-  const [{ data: order, error }, { data: menuItems }, { data: balance }, { data: payments }] = await Promise.all([
+  const [
+    { data: order, error },
+    { data: menuItems },
+    { data: balance },
+    { data: payments },
+    { data: preparationTasks },
+    { data: activityLog },
+  ] = await Promise.all([
     supabase
       .from("orders")
       .select("*, customers(*)")
@@ -72,6 +113,12 @@ export async function fetchOrderDetail(businessId: string, orderId: string): Pro
       .select("*")
       .eq("order_id", orderId)
       .order("payment_date", { ascending: false })
+      .order("created_at", { ascending: false }),
+    supabase.from("order_preparation_tasks").select("*").eq("order_id", orderId).order("display_order"),
+    supabase
+      .from("activity_logs")
+      .select("*")
+      .eq("order_id", orderId)
       .order("created_at", { ascending: false }),
   ]);
 
@@ -113,5 +160,7 @@ export async function fetchOrderDetail(businessId: string, orderId: string): Pro
     customer: mapCustomer(order.customers),
     totalPaidPaise: balance?.total_paid_paise ?? 0,
     payments: (payments ?? []).map(mapPayment),
+    preparationTasks: (preparationTasks ?? []).map(mapPreparationTask),
+    activityLog: (activityLog ?? []).map(mapActivityLogEntry),
   };
 }

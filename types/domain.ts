@@ -175,3 +175,21 @@ export interface PaymentSummary {
   balancePaise: Paise;
   status: "not_paid" | "partially_paid" | "paid" | "overdue";
 }
+
+export interface PreparationTask {
+  id: string;
+  orderId: string;
+  label: string;
+  isCompleted: boolean;
+  completedAt: string | null;
+  displayOrder: number;
+}
+
+export interface ActivityLogEntry {
+  id: string;
+  orderId: string | null;
+  actorId: string | null;
+  action: string;
+  details: Record<string, unknown> | null;
+  createdAt: string;
+}
