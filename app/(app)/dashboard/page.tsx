@@ -7,11 +7,15 @@ export default async function DashboardPage() {
   const businessId = await getActiveBusinessId();
   const supabase = createServerSupabaseClient();
 
-  const [{ data: business }, upcomingOrders, allOrders] = await Promise.all([
+  const [{ data: business }, allOrders] = await Promise.all([
     supabase.from("businesses").select("name").eq("id", businessId).single(),
-    fetchOrdersWithBalances(businessId, { upcomingOnly: true }),
     fetchOrdersWithBalances(businessId),
   ]);
+
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const upcomingOrders = allOrders
+    .filter((o) => o.status !== "cancelled" && o.eventDate >= todayISO)
+    .sort((a, b) => a.eventDate.localeCompare(b.eventDate));
 
   const now = new Date();
   const currentMonth = now.getMonth();
