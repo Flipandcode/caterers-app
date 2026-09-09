@@ -1,16 +1,11 @@
 import { getActiveBusinessId } from "@/lib/business-context";
 import { fetchOrdersWithBalances } from "@/lib/orders-data";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { DashboardScreen } from "@/features/dashboard/components/DashboardScreen";
 
 export default async function DashboardPage() {
   const businessId = await getActiveBusinessId();
-  const supabase = createServerSupabaseClient();
 
-  const [{ data: business }, allOrders] = await Promise.all([
-    supabase.from("businesses").select("name").eq("id", businessId).single(),
-    fetchOrdersWithBalances(businessId),
-  ]);
+  const allOrders = await fetchOrdersWithBalances(businessId);
 
   const todayISO = new Date().toISOString().slice(0, 10);
   const upcomingOrders = allOrders
@@ -34,7 +29,6 @@ export default async function DashboardPage() {
 
   return (
     <DashboardScreen
-      businessName={business?.name ?? "Your business"}
       upcomingOrders={upcomingOrders}
       thisMonthRevenuePaise={thisMonthRevenuePaise}
       pendingPaymentsPaise={pendingPaymentsPaise}

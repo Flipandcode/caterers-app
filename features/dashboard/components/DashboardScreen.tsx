@@ -4,7 +4,6 @@ import { OrderCard } from "@/features/orders/components/OrderCard";
 import { formatPaise } from "@/lib/money";
 
 interface DashboardScreenProps {
-  businessName: string;
   upcomingOrders: OrderListRow[];
   thisMonthRevenuePaise: number;
   pendingPaymentsPaise: number;
@@ -19,7 +18,6 @@ function greeting(): string {
 }
 
 export function DashboardScreen({
-  businessName,
   upcomingOrders,
   thisMonthRevenuePaise,
   pendingPaymentsPaise,
@@ -31,10 +29,10 @@ export function DashboardScreen({
   return (
     <div className="pb-24">
       <header className="px-4 pb-2 pt-6">
+        <h1 className="font-display text-2xl">{greeting()}</h1>
         <p className="text-sm text-ink/60">
-          {greeting()} · {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long" })}
+          {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}
         </p>
-        <h1 className="font-display text-2xl">{businessName}</h1>
       </header>
 
       <div className="grid grid-cols-2 gap-3 px-4">

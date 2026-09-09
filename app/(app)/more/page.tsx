@@ -2,6 +2,7 @@ import Link from "next/link";
 import { signOutAction } from "@/server/actions/auth";
 
 const LINKS = [
+  { href: "/settings/branding", label: "Branding" },
   { href: "/packages", label: "Packages" },
   { href: "/menus", label: "Menu catalogue" },
 ];
@@ -24,8 +25,7 @@ export default function MorePage() {
       </div>
 
       <p className="mt-4 text-sm text-ink/50">
-        Settings (business profile, branding, payment details, terms, notifications) is coming in a later
-        phase.
+        Business profile, payment details, terms, and notification settings are coming in a later phase.
       </p>
 
       <form action={signOutAction} className="mt-6">
