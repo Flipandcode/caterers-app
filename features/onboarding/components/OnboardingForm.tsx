@@ -96,7 +96,7 @@ export function OnboardingForm() {
           <Button
             type="submit"
             disabled={submitting}
-            className="mt-2 h-12 bg-marigold text-base font-medium text-white hover:bg-marigold/90"
+            className="mt-2 h-12 bg-marigold text-base font-medium text-white shadow-marigold hover:bg-marigold/90"
           >
             {submitting ? "Setting up…" : "Continue"}
           </Button>

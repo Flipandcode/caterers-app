@@ -2,6 +2,7 @@ import { getActiveBusinessId } from "@/lib/business-context";
 import { fetchOrdersWithBalances } from "@/lib/orders-data";
 import { OrderCard } from "@/features/orders/components/OrderCard";
 import { formatPaise } from "@/lib/money";
+import { CircleCheck } from "lucide-react";
 
 export default async function PaymentsPage() {
   const businessId = await getActiveBusinessId();
@@ -30,6 +31,9 @@ export default async function PaymentsPage() {
       <div className="flex flex-col gap-3 px-4">
         {withBalance.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-16 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green/10">
+              <CircleCheck className="h-6 w-6 text-green" />
+            </div>
             <p className="font-display text-lg">All caught up.</p>
             <p className="text-sm text-ink/60">No orders have an outstanding balance right now.</p>
           </div>

@@ -25,24 +25,28 @@ export function BottomNav() {
       <Link
         href="/orders/new"
         aria-label="New order"
-        className="fixed bottom-[76px] left-1/2 z-30 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-marigold text-white shadow-lg"
+        className="fixed bottom-[76px] left-1/2 z-30 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-marigold text-white shadow-marigold hover:brightness-105 active:brightness-95"
       >
         <Plus className="h-6 w-6" />
       </Link>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 flex h-[68px] border-t border-surface bg-bg/95 backdrop-blur">
+      <nav className="fixed inset-x-0 bottom-0 z-20 flex h-[68px] border-t border-surface bg-bg/95 shadow-[0_-4px_16px_hsl(var(--color-ink)/0.06)] backdrop-blur">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href || pathname?.startsWith(`${href}/`);
           return (
             <Link
               key={href}
               href={href}
-              className={`flex flex-1 flex-col items-center justify-center gap-0.5 text-xs font-medium ${
-                isActive ? "text-marigold" : "text-ink/50"
-              }`}
+              className="flex flex-1 flex-col items-center justify-center gap-1 text-xs font-medium"
             >
-              <Icon className="h-5 w-5" />
-              {label}
+              <span
+                className={`flex h-7 w-11 items-center justify-center rounded-full transition-colors ${
+                  isActive ? "bg-marigold/15" : ""
+                }`}
+              >
+                <Icon className={`h-5 w-5 ${isActive ? "text-marigold" : "text-ink/45"}`} />
+              </span>
+              <span className={isActive ? "text-marigold" : "text-ink/45"}>{label}</span>
             </Link>
           );
         })}

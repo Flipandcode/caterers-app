@@ -25,7 +25,7 @@ interface MenuItemRowProps {
 
 export function MenuItemRow({ item, onEdit, onToggleActive }: MenuItemRowProps) {
   return (
-    <div className="flex items-stretch gap-3 border-b border-[hsl(var(--color-surface))] py-3 last:border-b-0">
+    <div className="flex items-stretch gap-3 rounded-lg border-b border-[hsl(var(--color-surface))] px-1 py-3 transition-colors last:border-b-0 hover:bg-[hsl(var(--color-marigold))]/5">
       <div className={`w-1 shrink-0 rounded-full ${FOOD_TYPE_BAR[item.foodType]}`} aria-hidden />
 
       <button

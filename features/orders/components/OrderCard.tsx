@@ -30,16 +30,29 @@ export function OrderCard({ order }: { order: OrderListRow }) {
   const status = paymentStatus(order.grandTotalPaise, order.totalPaidPaise, order.eventDate);
   const isSoon = ["Today", "Tomorrow"].includes(daysUntil(order.eventDate));
 
+  const accentColor =
+    order.status === "cancelled"
+      ? "border-l-ink/15"
+      : status === "overdue"
+        ? "border-l-tamarind"
+        : isSoon
+          ? "border-l-marigold"
+          : order.status === "completed"
+            ? "border-l-green"
+            : "border-l-surface";
+
   return (
     <Link
       href={`/orders/${order.id}`}
-      className={`block rounded-lg border p-4 ${
-        isSoon ? "border-marigold bg-marigold/5" : "border-surface"
+      className={`block rounded-lg border border-surface border-l-[3px] bg-bg p-4 shadow-warm-sm transition-shadow hover:shadow-warm ${accentColor} ${
+        order.status === "cancelled" ? "opacity-60" : ""
       }`}
     >
       <div className="flex items-baseline justify-between">
         <p className="font-display text-lg">{order.customerName}</p>
-        <span className="text-xs font-medium text-marigold">{daysUntil(order.eventDate)}</span>
+        <span className={`text-xs font-medium ${isSoon ? "text-marigold" : "text-ink/40"}`}>
+          {daysUntil(order.eventDate)}
+        </span>
       </div>
       <p className="text-sm text-ink/70">{order.eventName}</p>
 

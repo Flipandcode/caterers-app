@@ -175,7 +175,7 @@ export function RecordPaymentForm({ open, onOpenChange, businessId, orderId, bal
           <Button
             type="submit"
             disabled={saving}
-            className="mt-2 h-12 bg-marigold text-base font-medium text-white hover:bg-marigold/90"
+            className="mt-2 h-12 bg-marigold text-base font-medium text-white shadow-marigold hover:bg-marigold/90"
           >
             {saving ? "Saving…" : "Record payment"}
           </Button>

@@ -14,7 +14,7 @@ export function BrandHeader({ displayName, logoUrl }: BrandHeaderProps) {
   const initial = displayName.trim().charAt(0).toUpperCase() || "?";
 
   return (
-    <div className="flex items-center gap-2.5 border-b border-surface bg-bg px-4 py-2.5">
+    <div className="flex items-center gap-2.5 border-b border-surface bg-bg px-4 py-2.5 shadow-warm-sm">
       {logoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element -- external Supabase Storage URL, not a local asset
         <img
@@ -23,7 +23,7 @@ export function BrandHeader({ displayName, logoUrl }: BrandHeaderProps) {
           className="h-8 w-8 shrink-0 rounded-full border border-surface object-cover"
         />
       ) : (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-marigold text-sm font-display font-bold text-white">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-marigold font-display text-sm font-bold text-white shadow-marigold">
           {initial}
         </div>
       )}

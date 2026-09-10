@@ -109,7 +109,7 @@ export function BrandingForm({ businessId, currentDisplayName, currentLogoUrl, l
       <Button
         type="submit"
         disabled={saving}
-        className="h-12 bg-marigold text-base font-medium text-white hover:bg-marigold/90"
+        className="h-12 bg-marigold text-base font-medium text-white shadow-marigold hover:bg-marigold/90"
       >
         {saving ? "Saving…" : "Save branding"}
       </Button>

@@ -327,7 +327,7 @@ export function PackageBuilder({ businessId, categories, existingPackage }: Pack
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="h-12 w-full bg-[hsl(var(--color-marigold))] text-base font-medium text-white hover:bg-[hsl(var(--color-marigold))]/90"
+          className="h-12 w-full bg-[hsl(var(--color-marigold))] text-base font-medium text-white shadow-marigold hover:bg-[hsl(var(--color-marigold))]/90"
         >
           {saving ? "Saving…" : existingPackage ? "Save changes" : "Create package"}
         </Button>

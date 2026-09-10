@@ -6,7 +6,7 @@ import { MenuCategoryWithItems, MenuItem, FoodType } from "@/types/domain";
 import { MenuCategorySection } from "./MenuCategorySection";
 import { MenuItemForm } from "./MenuItemForm";
 import { Input } from "@/components/ui/input";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, UtensilsCrossed } from "lucide-react";
 import { createMenuCategoryAction } from "@/server/actions/menu-categories";
 import {
   createMenuItemAction,
@@ -214,7 +214,7 @@ export function MenuCatalogueScreen({ businessId, initialCategories }: MenuCatal
       <button
         onClick={openAddForm}
         aria-label="Add menu item"
-        className="fixed bottom-24 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(var(--color-marigold))] text-white shadow-lg"
+        className="fixed bottom-24 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(var(--color-marigold))] text-white shadow-marigold hover:brightness-105 active:brightness-95"
       >
         <Plus className="h-6 w-6" />
       </button>
@@ -239,6 +239,11 @@ export function MenuCatalogueScreen({ businessId, initialCategories }: MenuCatal
 function EmptyState({ hasAnyItems, onAdd }: { hasAnyItems: boolean; onAdd: () => void }) {
   return (
     <div className="flex flex-col items-center gap-3 px-8 py-16 text-center">
+      {!hasAnyItems && (
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(var(--color-marigold))]/10">
+          <UtensilsCrossed className="h-6 w-6 text-[hsl(var(--color-marigold))]" />
+        </div>
+      )}
       <p className="font-display text-lg">
         {hasAnyItems ? "No dishes match that search." : "Build your food catalogue."}
       </p>
@@ -249,7 +254,7 @@ function EmptyState({ hasAnyItems, onAdd }: { hasAnyItems: boolean; onAdd: () =>
           </p>
           <button
             onClick={onAdd}
-            className="mt-2 rounded-lg bg-[hsl(var(--color-marigold))] px-5 py-2.5 text-sm font-medium text-white"
+            className="mt-2 rounded-lg bg-[hsl(var(--color-marigold))] px-5 py-2.5 text-sm font-medium text-white shadow-marigold"
           >
             Add menu item
           </button>

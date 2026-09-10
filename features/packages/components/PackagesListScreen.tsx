@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Package } from "@/types/domain";
 import { formatPaise } from "@/lib/money";
 import { archivePackageAction, duplicatePackageAction } from "@/server/actions/packages";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, PackageOpen } from "lucide-react";
 
 interface PackagesListScreenProps {
   initialPackages: Package[];
@@ -54,20 +54,23 @@ export function PackagesListScreen({ initialPackages }: PackagesListScreenProps)
       <div className="flex flex-col gap-3 px-4">
         {packages.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-marigold/10">
+              <PackageOpen className="h-6 w-6 text-marigold" />
+            </div>
             <p className="font-display text-lg">No packages created yet.</p>
             <p className="text-sm text-ink/60">
               Build a reusable package once, then select it in seconds on every order.
             </p>
             <Link
               href="/packages/new"
-              className="mt-2 rounded-lg bg-marigold px-5 py-2.5 text-sm font-medium text-white"
+              className="mt-2 rounded-lg bg-marigold px-5 py-2.5 text-sm font-medium text-white shadow-marigold"
             >
               Create your first package
             </Link>
           </div>
         ) : (
           packages.map((pkg) => (
-            <div key={pkg.id} className="relative rounded-lg border border-surface p-4">
+            <div key={pkg.id} className="relative rounded-lg border border-surface bg-bg p-4 shadow-warm-sm transition-shadow hover:shadow-warm">
               <Link href={`/packages/${pkg.id}`} className="block pr-8">
                 <div className="flex items-baseline justify-between">
                   <p className="font-display text-lg">{pkg.name}</p>

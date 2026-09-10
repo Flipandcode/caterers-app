@@ -539,7 +539,7 @@ export function OrderWizard({ businessId, categories, packages }: OrderWizardPro
         {step < STEPS.length - 1 ? (
           <Button
             disabled={!canProceed()}
-            className="h-12 flex-1 bg-marigold text-white hover:bg-marigold/90"
+            className="h-12 flex-1 bg-marigold text-white shadow-marigold hover:bg-marigold/90"
             onClick={() => setStep((s) => s + 1)}
           >
             Next
@@ -547,7 +547,7 @@ export function OrderWizard({ businessId, categories, packages }: OrderWizardPro
         ) : (
           <Button
             disabled={submitting}
-            className="h-12 flex-1 bg-marigold text-white hover:bg-marigold/90"
+            className="h-12 flex-1 bg-marigold text-white shadow-marigold hover:bg-marigold/90"
             onClick={handleSubmit}
           >
             {submitting ? "Creating order…" : "Create order"}

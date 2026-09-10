@@ -191,7 +191,7 @@ export function MenuItemForm({
           <Button
             type="submit"
             disabled={saving}
-            className="mt-2 h-12 bg-[hsl(var(--color-marigold))] text-base font-medium text-white hover:bg-[hsl(var(--color-marigold))]/90"
+            className="mt-2 h-12 bg-[hsl(var(--color-marigold))] text-base font-medium text-white shadow-marigold hover:bg-[hsl(var(--color-marigold))]/90"
           >
             {saving ? "Saving…" : isEditing ? "Save changes" : "Add item"}
           </Button>
