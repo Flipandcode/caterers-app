@@ -5,11 +5,10 @@ import { getActiveBusinessId } from "@/lib/business-context";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 /**
- * Shared shell for every signed-in screen. Note: some screens (Menus,
- * Package builder) render their own screen-specific floating action button
- * alongside the global "New Order" FAB here — that's intentional (a global
- * primary action plus a contextual one), but worth revisiting visually if
- * two circular buttons ever appear stacked on the same screen.
+ * Shared shell for every signed-in screen. BottomNav itself hides the
+ * global "New Order" FAB on routes with their own contextual FAB (e.g.
+ * Menus' "Add menu item") — see ROUTES_WITH_OWN_FAB in that component —
+ * so only one floating "+" ever shows at a time.
  *
  * This layout's data fetch (business name/logo) runs once when a signed-in
  * user first lands in this route group, not on every tab click — the App

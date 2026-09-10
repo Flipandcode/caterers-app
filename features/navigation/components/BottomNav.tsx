@@ -12,23 +12,33 @@ const NAV_ITEMS = [
   { href: "/more", label: "More", icon: MoreHorizontal },
 ] as const;
 
+// Routes with their own contextual floating action button (e.g. Menus'
+// "Add menu item") hide the global New Order FAB here — having both at once
+// showed as two competing "+" buttons on screen, which was confusing rather
+// than helpful.
+const ROUTES_WITH_OWN_FAB = ["/menus"];
+
 /**
  * Fixed bottom nav, per the spec's suggested mobile IA. The floating "+"
  * (New Order) sits above it, centered, so it stays reachable one-handed
- * regardless of which tab is active.
+ * regardless of which tab is active — except on routes that already have
+ * their own primary FAB (see ROUTES_WITH_OWN_FAB above).
  */
 export function BottomNav() {
   const pathname = usePathname();
+  const showGlobalFab = !ROUTES_WITH_OWN_FAB.some((r) => pathname === r || pathname?.startsWith(`${r}/`));
 
   return (
     <>
-      <Link
-        href="/orders/new"
-        aria-label="New order"
-        className="fixed bottom-[76px] left-1/2 z-30 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-marigold text-white shadow-marigold hover:brightness-105 active:brightness-95"
-      >
-        <Plus className="h-6 w-6" />
-      </Link>
+      {showGlobalFab && (
+        <Link
+          href="/orders/new"
+          aria-label="New order"
+          className="fixed bottom-[76px] left-1/2 z-30 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-marigold text-white shadow-marigold hover:brightness-105 active:brightness-95"
+        >
+          <Plus className="h-6 w-6" />
+        </Link>
+      )}
 
       <nav className="fixed inset-x-0 bottom-0 z-20 flex h-[68px] border-t border-surface bg-bg/95 shadow-[0_-4px_16px_hsl(var(--color-ink)/0.06)] backdrop-blur">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
